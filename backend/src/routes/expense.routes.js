@@ -6,5 +6,7 @@ const { authenticate } = require('../middleware/auth.middleware');
 // POST /api/expenses
 router.post('/', authenticate, ExpenseController.createExpense);
 
+router.get('/my', authenticate, ExpenseController.getMyExpenses);
+
 // GET /my, GET /team placeholders remain if needed
 module.exports = router;

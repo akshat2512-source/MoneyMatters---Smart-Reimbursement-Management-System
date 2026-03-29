@@ -4,7 +4,7 @@ class ExpenseController {
   static async createExpense(req, res) {
     try {
       const user = req.user;
-      
+
       // Error handling: If user is not Employee -> return 403
       if (user.role !== 'EMPLOYEE' && user.role !== 'Employee') {
         return res.status(403).json({ message: 'Forbidden: Only Employees can create expenses' });
@@ -18,10 +18,27 @@ class ExpenseController {
       }
 
       const result = await ExpenseService.createExpense(req.body, user);
-      
+
       return res.status(201).json(result);
     } catch (error) {
       console.error('Error creating expense:', error);
+      return res.status(500).json({ message: 'Internal Server Error' });
+    }
+  }
+
+  static async getMyExpenses(req, res) {
+    try {
+      const user = req.user;
+
+      const expenses = await ExpenseService.getMyExpenses(user);
+
+      return res.status(200).json({
+        success: true,
+        data: expenses
+      });
+
+    } catch (error) {
+      console.error('Error fetching expenses:', error);
       return res.status(500).json({ message: 'Internal Server Error' });
     }
   }
