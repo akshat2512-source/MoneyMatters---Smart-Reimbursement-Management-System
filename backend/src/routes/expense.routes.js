@@ -1,12 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const ExpenseController = require('../controllers/expense.controller');
+
+const { createExpense } = require('../controllers/expense.controller');
 const { authenticate } = require('../middleware/auth.middleware');
 
 // POST /api/expenses
-router.post('/', authenticate, ExpenseController.createExpense);
+router.post('/', authenticate, createExpense);
 
-router.get('/my', authenticate, ExpenseController.getMyExpenses);
-
-// GET /my, GET /team placeholders remain if needed
 module.exports = router;
