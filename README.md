@@ -1,185 +1,121 @@
-# 💸 MoneyMatters - Smart Reimbursement Management System
+# 💸 MoneyMatters — The Smart Nucleus of Company Spend
 
-## 🚀 Overview
-MoneyMatters is a full-stack expense reimbursement platform designed to simplify and automate the entire expense lifecycle - from submission to approval.
+[![Demo Video](https://img.shields.io/badge/Demo-Watch%20Video-6366f1?style=for-the-badge&logo=google-drive)](https://drive.google.com/drive/folders/1Wbd0O7VJGeuyXZsQ53CaUaiqjkp6ZnIX)
+[![Tech Stack](https://img.shields.io/badge/Tech%20Stack-PERN-blue?style=for-the-badge)](https://github.com/akshat2512/MoneyMatters)
+[![License](https://img.shields.io/badge/License-MIT-emerald?style=for-the-badge)](LICENSE)
 
-It replaces manual, error-prone processes with a clean, efficient, and scalable workflow system.
-
----
-
-## 🎯 Problem Statement
-Organizations struggle with:
-- Manual expense tracking  
-- Lack of transparency  
-- Complex approval workflows  
-- Currency inconsistencies in global operations  
+**MoneyMatters** is an end-to-end, automated expense reimbursement SaaS designed to transform how organizations manage corporate spending. Built with a focus on **AI-driven intelligence**, **scalable architecture**, and **seamless monetization**, it handles the entire expense lifecycle—from instant OCR scanning to multi-stage approval workflows.
 
 ---
 
-## 💡 Solution
-MoneyMatters provides:
-- Automated expense submission  
-- Role-based approval workflows  
-- OCR-based receipt scanning  
-- Currency conversion for global transactions  
+## 🚀 The Vision
+
+Traditional reimbursement processes are broken: manual data entry, high fraud risk, and opaque approval chains. **MoneyMatters** serves as the intelligent bridge, automating financial compliance while providing real-time insights for administrators and instant payouts for employees.
 
 ---
 
-## 🧩 Core Features
+## 🔥 Advanced Features
 
-### 🔐 Authentication & User Management
-- Auto company creation on signup  
-- Role-based access:
-  - Admin  
-  - Manager  
-  - Employee  
+### 🧠 Intelligence & Automation
+- **AI Fraud Detection System**: Automatically flags suspicious activity including **duplicate receipts**, **rapid-fire submissions**, and **unusual spending patterns**.
+- **Intelligent OCR Engine**: Powered by Tesseract.js, the system extracts merchants, amounts, and dates from receipts with high precision, eliminating manual entry.
+- **Smart Analytics**: A comprehensive dashboard providing visual spend breakdown, category insights, and financial forecasting.
 
----
+### 💸 SaaS Monetization & Scale
+- **Tiered Subscription System**: Fully functional **Free**, **Pro**, and **Enterprise** plans with granular feature gating.
+- **Razorpay Integration**: End-to-end payment flow supporting subscription-like behavior and automatic plan unlocking.
+- **Multi-Tenant Architecture**: Engineered for isolation, allowing multiple companies to operate securely within the same ecosystem.
 
-### 👨‍💻 Employee Features
-- Submit expense claims  
-- Upload receipt  
-- OCR-based auto-fill (amount, date, description)  
-- View expense status (Pending / Approved / Rejected)  
-
----
-
-### 🧑‍⚖️ Manager Features
-- View team expenses  
-- Approve / Reject requests  
-- Add comments  
+### 📦 Productivity Tools
+- **Multi-Receipt Batch Upload**: Process up to **6 receipts simultaneously**, significantly reducing time-to-reimbursement.
+- **Dynamic Approval Pipeline**: Role-Based Access Control (RBAC) with a sequential workflow (Employee → Manager → Admin).
+- **Global Currency Support**: Automatic detection and conversion using real-time exchange rates.
 
 ---
 
-### 🏢 Admin Features
-- Manage users and roles  
-- Define approval workflows  
-- View all expenses  
-- Override approvals  
+## 🏗️ System Architecture
+
+MoneyMatters is built on a modular, secure, and highly scalable foundation:
+
+- **Frontend**: A premium React.js experience utilizing **Tailwind CSS** for modern aesthetics and **Framer Motion** for high-end micro-interactions.
+- **Backend**: A robust Node.js/Express core featuring **Modular Middleware** for secure authentication and real-time feature gating.
+- **Database**: PostgreSQL with complex relational schema for managing multi-tenant data, fraud logs, and approval histories.
+- **Security**: JWT-based authentication combined with secure SHA256 HMAC signature verification for all payment transactions.
 
 ---
 
-### 🔍 OCR & AI Features
-- Scan receipt using OCR  
-- Automatically extract:
-  - Amount  
-  - Date  
-  - Description  
-- Smart category detection  
+## 🎯 Why This Project Stands Out
+
+Built entirely as a solo-developer project, **MoneyMatters** isn't just a prototype—it’s a production-ready simulation of a real-world SaaS startup.
+
+1.  **Product Thinking**: Every feature is designed with a "customer-first" mindset, from the landing page to the billing tiers.
+2.  **Technical Depth**: Implements advanced concepts like **AI fraud logic**, **automated OCR pipelines**, and **secure third-party payment integrations**.
+3.  **End-to-End Execution**: Handles everything from database migrations and backend logic to high-fidelity UI design.
 
 ---
 
-### 💱 Currency Conversion
-- Detect currency from receipt  
-- Convert to company currency using exchange API  
+## 🎥 Demo & Visuals
 
----
+### [Watch the Full Product Walkthrough](https://drive.google.com/drive/folders/1Wbd0O7VJGeuyXZsQ53CaUaiqjkp6ZnIX)
 
-## 🔄 Approval Workflow
-- Sequential approval system  
-- Expense flows from employee → manager → final decision  
-- Extendable for multi-level approval rules  
+<div align="center">
+  <img src="./screenshots/moneymatters.png" alt="Hero Section" width="800">
+</div>
+
+<details>
+<summary>📸 Internal Snapshots</summary>
+
+| Login & Auth | Smart OCR Scanning |
+| :--- | :--- |
+| ![Login](./screenshots/login.jpeg) | ![OCR](./screenshots/ocr.jpeg) |
+
+| Employee Dashboard | Admin Approval Panel |
+| :--- | :--- |
+| ![Employee](./screenshots/employee.jpeg) | ![Admin](./screenshots/admin.jpeg) |
+
+</details>
 
 ---
 
 ## 🛠️ Tech Stack
 
-### Frontend
-- React.js  
-- Tailwind CSS  
-
-### Backend
-- Node.js  
-
-### Database
-- PostgreSQL  
-
-### APIs & Tools
-- Tesseract.js (OCR)  
-- Exchange Rate API (currency conversion)  
+- **Languge**: JavaScript (ES6+)
+- **Frontend**: React, Tailwind CSS, Framer Motion, Lucide Icons
+- **Backend**: Node.js, Express.js
+- **Database**: PostgreSQL (PG-Pool)
+- **Services**: Tesseract.js (OCR), Razorpay SDK (Payments), ExchangeRate-API
 
 ---
 
-## 🧠 Key Highlights
-- Built completely from scratch  
-- Clean and modern SaaS UI  
-- Real-world business use case  
-- Scalable architecture for future enhancements  
+## 🏁 Installation & Setup
+
+1.  **Clone the Repository**
+    ```bash
+    git clone https://github.com/akshat2512/MoneyMatters.git
+    cd MoneyMatters
+    ```
+
+2.  **Environment Configuration**
+    Create a `.env` in the `backend` folder:
+    ```env
+    DB_USER=postgres
+    DB_NAME=reimbursement
+    JWT_SECRET=your_secret
+    RAZORPAY_KEY_ID=your_key
+    RAZORPAY_KEY_SECRET=your_secret
+    ```
+
+3.  **Run the Project**
+    ```bash
+    # Backend
+    cd backend
+    npm start
+    
+    # Frontend
+    cd frontend
+    npm start
+    ```
 
 ---
 
-## 🎥 Demo Video
-
-[![Watch Demo](./screenshots/moneymatters.png)](https://drive.google.com/drive/folders/1Wbd0O7VJGeuyXZsQ53CaUaiqjkp6ZnIX)
-
-👉 Click the image above to watch the full demo  
-
----
-
-## 📸 Project Snapshots
-
-### 🔐 Login Page
-![Login](./screenshots/login.jpeg)
-
-### 👨‍💻 Employee Dashboard
-![Employee](./screenshots/employee.jpeg)
-
-### 🧾 OCR Receipt Scan & Auto-fill
-![OCR](./screenshots/ocr.jpeg)
-
-### 🧑‍⚖️ Manager Approval Panel
-![Manager](./screenshots/manager.jpeg)
-
-### 🏢 Admin Dashboard
-![Admin](./screenshots/admin.jpeg)
-
----
-
-## 📸 Demo Flow
-1. Employee uploads receipt  
-2. OCR extracts data automatically  
-3. Expense submitted  
-4. Manager reviews and approves/rejects  
-5. Status updated in real-time  
-
----
-
-## 👨‍💻 Contributors
-
-- **Akshat Mishra**
-  - OCR implementation  
-  - Currency conversion feature    
-
-- **Ayush Kumar**
-  - Backend APIs  
-  - Approval logic  
-
-- **Aman Kumar**
-  - UI/UX design  
-  - Dashboard components  
-
-- **Anshu Kumar**
-  - Employee dashboard development
-  - Integration & testing  
-
----
-
-## ⚡ Team Split (7 hrs Hackathon Execution)
-
-- P1: Backend - Auth, User CRUD, Company, Currency API  
-- P2: Backend - Expenses, Approval Engine (sequential/conditional)  
-- P3: Frontend - Auth pages, Employee dashboard  
-- P4: Frontend - Manager/Admin dashboards, Rule builder  
-
----
-
-## 🚀 Future Enhancements
-- Multi-level approval rules  
-- Percentage-based approvals  
-- AI-based expense categorization  
-- Mobile responsiveness  
-
----
-
-## 🏁 Conclusion
-MoneyMatters transforms traditional reimbursement systems into a smart, automated, and scalable solution - making every expense truly matter.
+*Designed and Developed with ❤️ by Akshat Mishra*
