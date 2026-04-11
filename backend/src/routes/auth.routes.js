@@ -6,5 +6,6 @@ const authController = require('../controllers/auth.controller');
 router.post('/create-company', authController.createCompany);
 router.post('/join-company', authController.joinCompany);
 router.post('/login', authController.login);
+router.post('/google', authController.googleLogin);
 
 module.exports = router;

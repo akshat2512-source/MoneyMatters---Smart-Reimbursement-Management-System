@@ -18,6 +18,7 @@ api.interceptors.request.use(
 
 // ── Auth ──
 export const login = (data) => api.post('auth/login', data);
+export const googleLogin = (data) => api.post('auth/google', data);
 export const createCompany = (data) => api.post('auth/create-company', data);
 export const joinCompany = (data) => api.post('auth/join-company', data);
 
