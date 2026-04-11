@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import LandingPage from './pages/LandingPage';
 import AuthPage from './pages/AuthPage';
 import AdminDashboard from './pages/AdminDashboard';
 import ManagerDashboard from './pages/ManagerDashboard';
@@ -26,19 +28,37 @@ function App() {
     setUser(null);
   };
 
-  if (!user) {
-    return <AuthPage onLogin={handleLogin} />;
-  }
+  return (
+    <Router>
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<LandingPage />} />
+        <Route 
+          path="/login" 
+          element={!user ? <AuthPage onLogin={handleLogin} initialMode="login" /> : <Navigate to="/dashboard" />} 
+        />
+        <Route 
+          path="/signup" 
+          element={!user ? <AuthPage onLogin={handleLogin} initialMode="create_company" /> : <Navigate to="/dashboard" />} 
+        />
 
-  if (user.role === 'admin') {
-    return <AdminDashboard user={user} onLogout={handleLogout} />;
-  }
+        {/* Protected Dashboard Route */}
+        <Route 
+          path="/dashboard" 
+          element={
+            !user ? <Navigate to="/login" /> : (
+              user.role === 'admin' ? <AdminDashboard user={user} onLogout={handleLogout} /> :
+              user.role === 'manager' ? <ManagerDashboard user={user} onLogout={handleLogout} /> :
+              <EmployeeDashboard user={user} onLogout={handleLogout} />
+            )
+          } 
+        />
 
-  if (user.role === 'manager') {
-    return <ManagerDashboard user={user} onLogout={handleLogout} />;
-  }
-
-  return <EmployeeDashboard user={user} onLogout={handleLogout} />;
+        {/* Catch-all */}
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </Router>
+  );
 }
 
 export default App;

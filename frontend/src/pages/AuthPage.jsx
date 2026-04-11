@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Eye, EyeOff, Zap, ArrowRight, Loader2, Building, UserPlus, XCircle } from 'lucide-react';
 import { login, createCompany, joinCompany, googleLogin } from '../api';
 
-const AuthPage = ({ onLogin }) => {
-  const [authMode, setAuthMode] = useState('login'); // 'login' | 'create_company' | 'join_company'
+const AuthPage = ({ onLogin, initialMode = 'login' }) => {
+  const [authMode, setAuthMode] = useState(initialMode); // 'login' | 'create_company' | 'join_company'
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
