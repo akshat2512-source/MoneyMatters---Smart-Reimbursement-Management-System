@@ -5,6 +5,8 @@ import AuthPage from './pages/AuthPage';
 import AdminDashboard from './pages/AdminDashboard';
 import ManagerDashboard from './pages/ManagerDashboard';
 import EmployeeDashboard from './pages/EmployeeDashboard';
+import PricingPage from './pages/PricingPage';
+
 
 function App() {
   const [user, setUser] = useState(() => {
@@ -41,6 +43,8 @@ function App() {
           path="/signup" 
           element={!user ? <AuthPage onLogin={handleLogin} initialMode="create_company" /> : <Navigate to="/dashboard" />} 
         />
+        <Route path="/pricing" element={<PricingPage user={user} onLogin={handleLogin} />} />
+
 
         {/* Protected Dashboard Route */}
         <Route 

@@ -1,5 +1,5 @@
-import React from 'react';
 import { Github, Twitter, Linkedin, Mail } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
@@ -28,7 +28,8 @@ const Footer = () => {
             <ul className="space-y-4">
               <li><a href="#features" className="text-xs font-bold text-slate-500 hover:text-indigo-600 transition-colors">Features</a></li>
               <li><a href="#how-it-works" className="text-xs font-bold text-slate-500 hover:text-indigo-600 transition-colors">How it works</a></li>
-              <li><a href="#pricing" className="text-xs font-bold text-slate-500 hover:text-indigo-600 transition-colors">Pricing</a></li>
+              <li><Link to="/pricing" className="text-xs font-bold text-slate-500 hover:text-indigo-600 transition-colors">Pricing</Link></li>
+
               <li><a href="#" className="text-xs font-bold text-slate-500 hover:text-indigo-600 transition-colors">API Docs</a></li>
             </ul>
           </div>

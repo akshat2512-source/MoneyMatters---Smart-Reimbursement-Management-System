@@ -70,4 +70,8 @@ export const getPendingUsers = () => api.get('admin/pending-users');
 export const approveUser = (userId) => api.post(`admin/approve/${userId}`);
 export const rejectUser = (userId) => api.post(`admin/reject/${userId}`);
 
+// ── Payments ──
+export const createOrder = (data) => api.post('payment/create-order', data);
+export const verifyPayment = (data) => api.post('payment/verify', data);
+
 export default api;
