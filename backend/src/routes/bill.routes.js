@@ -1,9 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const { authenticate } = require("../middleware/auth.middleware");
+const { authenticate, checkApprovedUser } = require("../middleware/auth.middleware");
 const { isAdmin, isManager, isEmployee } = require("../middleware/role.middleware");
 const billController = require("../controllers/bill.controller");
 const upload = require("../middleware/multer");
+
+// Apply approval check to all bill routes
+router.use(authenticate, checkApprovedUser);
 
 // ── Diagnostic ──
 router.get("/test", (req, res) => res.json({ message: "Bill routes are active" }));

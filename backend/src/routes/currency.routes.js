@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { authenticate } = require('../middleware/auth.middleware');
+const { authenticate, checkApprovedUser } = require('../middleware/auth.middleware');
 const CurrencyService = require('../services/currency.service');
 
+router.use(authenticate, checkApprovedUser);
+
 // GET /api/currency/convert?from=INR&to=USD&amount=500
-router.get('/convert', authenticate, async (req, res) => {
+router.get('/convert', async (req, res) => {
   try {
     const { from, to, amount } = req.query;
     if (!from || !to || !amount) {

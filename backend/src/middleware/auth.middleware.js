@@ -25,6 +25,32 @@ const authenticate = (req, res, next) => {
   }
 };
 
+const checkApprovedUser = async (req, res, next) => {
+  const pool = require('../config/db');
+  try {
+    const userId = req.user.id;
+    const result = await pool.query("SELECT status FROM users WHERE id = $1", [userId]);
+    
+    if (result.rows.length === 0) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    const { status } = result.rows[0];
+    if (status !== 'approved') {
+      return res.status(403).json({ 
+        success: false, 
+        message: `Access denied: Your account is currently '${status}'. Please contact an administrator.` 
+      });
+    }
+
+    next();
+  } catch (error) {
+    console.error("Check Approved User Error:", error.message);
+    return res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
+
 module.exports = {
-  authenticate
+  authenticate,
+  checkApprovedUser
 };

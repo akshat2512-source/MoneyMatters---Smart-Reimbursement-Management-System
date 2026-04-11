@@ -64,4 +64,9 @@ export const rejectExpense = (id) => api.put(`expenses/reject/${id}`);
 export const getUsers = () => api.get('users');
 export const createUser = (data) => api.post('users', data);
 
+// ── Admin: User Approval ──
+export const getPendingUsers = () => api.get('admin/pending-users');
+export const approveUser = (userId) => api.post(`admin/approve/${userId}`);
+export const rejectUser = (userId) => api.post(`admin/reject/${userId}`);
+
 export default api;

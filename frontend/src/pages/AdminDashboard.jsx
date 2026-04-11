@@ -5,7 +5,10 @@ import Table from '../components/Table';
 import Modal from '../components/Modal';
 import StatusBadge from '../components/StatusBadge';
 import { mockRules } from '../data/mockData';
-import { getAdminBills, adminBillAction, getUsers, createUser, getBatchedBills, billAction } from '../api';
+import { 
+  getAdminBills, adminBillAction, getUsers, createUser, getBatchedBills, billAction,
+  approveUser, rejectUser 
+} from '../api';
 import { getFullFileUrl } from '../utils/fileUtils';
 import {
   Plus, Users, DollarSign, Clock, CheckCircle, Shield,
@@ -288,6 +291,27 @@ const AdminDashboard = ({ user, onLogout }) => {
     }
   };
 
+  const handleApproveUser = async (userId) => {
+    try {
+      await approveUser(userId);
+      await fetchUsers();
+    } catch (err) {
+      console.error('Failed to approve user', err);
+      alert(err.response?.data?.message || 'Approval failed');
+    }
+  };
+
+  const handleRejectUser = async (userId) => {
+    if (!window.confirm("Are you sure you want to reject this user?")) return;
+    try {
+      await rejectUser(userId);
+      await fetchUsers();
+    } catch (err) {
+      console.error('Failed to reject user', err);
+      alert(err.response?.data?.message || 'Rejection failed');
+    }
+  };
+
   const pendingCount = bills.filter(b => b.current_stage === 'admin_review').length;
   const approvedCount = bills.filter(b => b.admin_status === 'approved').length;
   const totalAmount = bills.reduce((s, b) => s + Number(b.amount), 0);
@@ -416,10 +440,33 @@ const AdminDashboard = ({ user, onLogout }) => {
                         },
                         { key: 'email', label: 'Email', render: (val) => <span className="font-mono text-[11px] text-slate-400">{val}</span> },
                         {
-                          key: 'id', label: 'Status', render: () => (
-                            <span className="flex items-center gap-1.5 text-[10px] font-bold text-emerald-500 uppercase tracking-tight">
-                              <div className="w-1 h-1 rounded-full bg-emerald-500" /> Active
-                            </span>
+                          key: 'status', label: 'Status', render: (val) => (
+                            <StatusBadge status={val || 'pending'} />
+                          )
+                        },
+                        {
+                          key: 'status', label: 'Actions', render: (val, row) => (
+                            <div className="flex items-center gap-2">
+                              {/* Only show actions if user is pending AND is not the current admin themselves */}
+                              {(!val || val === 'pending') && row.id !== user.id && (
+                                <>
+                                  <button 
+                                    onClick={() => handleApproveUser(row.id)}
+                                    className="p-1.5 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-500 hover:text-white transition-all"
+                                    title="Approve User"
+                                  >
+                                    <CheckCircle size={14} />
+                                  </button>
+                                  <button 
+                                    onClick={() => handleRejectUser(row.id)}
+                                    className="p-1.5 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-500 hover:text-white transition-all"
+                                    title="Reject User"
+                                  >
+                                    <Trash2 size={14} />
+                                  </button>
+                                </>
+                              )}
+                            </div>
                           )
                         },
                       ]}

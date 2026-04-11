@@ -99,3 +99,10 @@ CREATE TABLE IF NOT EXISTS approval_requests (
 
 -- Initialize invite codes for existing companies (From 004)
 UPDATE companies SET invite_code = substring(md5(random()::text) from 1 for 8) WHERE invite_code IS NULL;
+
+-- 006_user_approval_status.sql
+ALTER TABLE users ADD COLUMN IF NOT EXISTS status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected'));
+ALTER TABLE users ADD COLUMN IF NOT EXISTS approved_by UUID REFERENCES users(id);
+ALTER TABLE users ADD COLUMN IF NOT EXISTS approved_at TIMESTAMPTZ;
+UPDATE users SET status = 'approved' WHERE status IS NULL;
+ALTER TABLE users ALTER COLUMN status SET NOT NULL;

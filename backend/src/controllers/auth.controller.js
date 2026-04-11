@@ -28,7 +28,7 @@ exports.createCompany = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const userResult = await pool.query(
-      "INSERT INTO users (name, email, password_hash, role, company_id) VALUES ($1, $2, $3, $4, $5) RETURNING id, name, email, role, company_id",
+      "INSERT INTO users (name, email, password_hash, role, company_id, status) VALUES ($1, $2, $3, $4, $5, 'approved') RETURNING id, name, email, role, company_id",
       [name, email, hashedPassword, 'admin', companyId]
     );
     const user = userResult.rows[0];
@@ -79,21 +79,14 @@ exports.joinCompany = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const userResult = await pool.query(
-      "INSERT INTO users (name, email, password_hash, role, company_id) VALUES ($1, $2, $3, $4, $5) RETURNING id, name, email, role, company_id",
+      "INSERT INTO users (name, email, password_hash, role, company_id, status) VALUES ($1, $2, $3, $4, $5, 'pending') RETURNING id, name, email, role, company_id, status",
       [name, email, hashedPassword, normalizedRole, companyId]
     );
     const user = userResult.rows[0];
 
-    const token = jwt.sign(
-      { id: user.id, role: user.role, company_id: user.company_id },
-      process.env.JWT_SECRET,
-      { expiresIn: "1d" }
-    );
-
     return res.json({
-      message: "Joined company successfully",
-      user: { id: user.id, name: user.name, email: user.email, role: user.role },
-      token,
+      message: "Registration successful. Your account is pending admin approval.",
+      user: { id: user.id, name: user.name, email: user.email, role: user.role, status: user.status },
     });
   } catch (error) {
     console.error("❌ Join company error:", error);
@@ -128,6 +121,13 @@ exports.login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password_hash);
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid password" });
+    }
+
+    if (user.status !== 'approved') {
+      return res.status(403).json({ 
+        message: `Your account is currently ${user.status}. Please contact an administrator for approval.`,
+        status: user.status
+      });
     }
 
     const token = jwt.sign(

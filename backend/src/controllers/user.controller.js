@@ -27,7 +27,7 @@ exports.createUser = async (req, res) => {
 exports.getUsers = async (req, res) => {
   try {
     const result = await pool.query(
-      "SELECT id, name, email, role FROM users WHERE company_id = $1",
+      "SELECT id, name, email, role, status FROM users WHERE company_id = $1",
       [req.user.company_id]
     );
 
