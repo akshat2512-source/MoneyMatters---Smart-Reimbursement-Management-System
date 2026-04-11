@@ -29,14 +29,28 @@ export const adminBillAction = (id, data) => api.patch(`bills/admin/${id}`, data
 export const getManagerBills = () => api.get('bills/manager');
 export const managerBillAction = (id, data) => api.patch(`bills/manager/${id}`, data);
 
+// ── Batch Upload ──
+export const batchUploadReceipts = (formData) =>
+  api.post('bills/batch-upload', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+
+// ── Admin: Batch View ──
+export const getBatchedBills = () => api.get('bills/admin/batches');
+
+// ── Unified Bill Action (PUT /bills/:id/action) ──
+// Body: { status: "APPROVED" | "REJECTED", comment: "..." }
+export const billAction = (id, data) => api.put(`bills/${id}/action`, data);
+
 // ── OCR & Upload ──
-export const uploadReceipt = (formData) => api.post('bills/upload', formData, {
-  headers: { 'Content-Type': 'multipart/form-data' }
-});
+export const uploadReceipt = (formData) =>
+  api.post('bills/upload', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
 export const scanReceipt = (receiptUrl) => api.post('bills/scan', { receiptUrl });
 
 // ── Currency ──
-export const convertCurrency = (from, amount, to = 'USD') => 
+export const convertCurrency = (from, amount, to = 'USD') =>
   api.get(`currency/convert?from=${from}&to=${to}&amount=${amount}`);
 
 // ── Legacy Expenses ──

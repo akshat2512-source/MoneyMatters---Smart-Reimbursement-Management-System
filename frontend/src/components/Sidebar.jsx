@@ -1,15 +1,16 @@
 import React from 'react';
 import {
   LayoutDashboard, Users, ShieldCheck, Receipt,
-  CheckSquare, FileText, LogOut, Zap, ChevronRight
+  CheckSquare, FileText, LogOut, ChevronRight, Layers
 } from 'lucide-react';
 
 const navItems = {
   admin: [
     { key: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { key: 'users', label: 'Users', icon: Users },
-    { key: 'rules', label: 'Approval Rules', icon: ShieldCheck },
     { key: 'expenses', label: 'All Expenses', icon: Receipt },
+    { key: 'batches', label: 'Batch Uploads', icon: Layers },
+    { key: 'rules', label: 'Approval Rules', icon: ShieldCheck },
   ],
   manager: [
     { key: 'approvals', label: 'Approvals', icon: CheckSquare },
