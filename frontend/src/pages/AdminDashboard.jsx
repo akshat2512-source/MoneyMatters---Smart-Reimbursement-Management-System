@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import Table from '../components/Table';
 import Modal from '../components/Modal';
 import StatusBadge from '../components/StatusBadge';
+import FraudInsights from '../components/admin/FraudInsights';
 import { mockRules } from '../data/mockData';
 import { 
   getAdminBills, adminBillAction, getUsers, createUser, getBatchedBills, billAction,
@@ -13,7 +14,7 @@ import { getFullFileUrl } from '../utils/fileUtils';
 import {
   Plus, Users, DollarSign, Clock, CheckCircle, Shield,
   Trash2, MessageSquare, ArrowRight, Scan, Copy, ExternalLink,
-  ChevronRight, Inbox, FileText, Layers, ChevronDown, AlertCircle, X
+  ChevronRight, Inbox, FileText, Layers, ChevronDown, AlertCircle, X, ShieldAlert
 } from 'lucide-react';
 
 // ── Stat Card ────────────────────────────────────────────────────────────────
@@ -190,7 +191,8 @@ const AdminDashboard = ({ user, onLogout }) => {
     users: 'User Management',
     rules: 'Approval Rules',
     expenses: 'Admin Approvals',
-    batches: 'Batch Uploads'
+    batches: 'Batch Uploads',
+    fraud: 'AI Fraud Insights'
   };
 
   const handleCopyInvite = () => {
@@ -318,7 +320,73 @@ const AdminDashboard = ({ user, onLogout }) => {
 
   return (
     <div className="flex min-h-screen bg-slate-50">
-      <Sidebar role="admin" activePage={activePage} onNavigate={setActivePage} onLogout={onLogout} />
+      <div className="hidden lg:block w-64 bg-[#0A0C10] border-r border-slate-800 flex-col p-6 overflow-hidden">
+        <div className="flex items-center gap-3 mb-10">
+          <div className="w-9 h-9 rounded-xl overflow-hidden shadow-lg shadow-indigo-500/20 border border-slate-700">
+            <img src="/logo.png" alt="MoneyMatters" className="w-full h-full object-cover" />
+          </div>
+          <span className="text-base font-black text-white tracking-tight">MoneyMatters</span>
+        </div>
+
+        <nav className="space-y-1 bg-[#0A0C10]">
+          {[
+            { id: 'dashboard', icon: Layers, label: 'Dashboard' },
+            { id: 'expenses', icon: Shield, label: 'Approvals', badge: pendingCount > 0 ? pendingCount : null },
+            { id: 'batches', icon: Inbox, label: 'Batches' },
+            { id: 'users', icon: Users, label: 'Team' },
+            { id: 'rules', icon: FileText, label: 'Rules' },
+          ].map((item) => (
+            <button
+              key={item.id}
+              onClick={() => setActivePage(item.id)}
+              className={`w-full flex items-center justify-between p-3.5 rounded-xl transition-all ${
+                activePage === item.id 
+                  ? 'bg-gradient-to-r from-indigo-600 to-indigo-500 text-white shadow-xl shadow-indigo-900/40' 
+                  : 'text-slate-500 hover:text-slate-300 hover:bg-slate-800/40'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <item.icon size={18} className={activePage === item.id ? 'text-white' : 'text-slate-600'} />
+                <span className="text-[11px] font-black uppercase tracking-[0.15em]">{item.label}</span>
+              </div>
+              {item.badge && (
+                <span className="bg-rose-500 text-white text-[9px] font-black min-w-[18px] h-[18px] flex items-center justify-center rounded-full px-1 shadow-lg shadow-rose-900/20 animate-pulse">
+                  {item.badge}
+                </span>
+              )}
+            </button>
+          ))}
+
+          <div className="pt-8 pb-4">
+              <span className="text-[9px] font-black text-slate-700 uppercase tracking-[0.2em] px-3">Advanced Intelligence</span>
+          </div>
+
+          <button
+              onClick={() => setActivePage('fraud')}
+              className={`w-full flex items-center justify-between p-3.5 rounded-xl transition-all ${
+                activePage === 'fraud' 
+                  ? 'bg-gradient-to-r from-red-600 to-rose-500 text-white shadow-xl shadow-red-900/40' 
+                  : 'text-slate-500 hover:text-red-400 hover:bg-red-500/5'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <ShieldAlert size={18} className={activePage === 'fraud' ? 'text-white' : 'text-red-900/30'} />
+                <span className="text-[11px] font-black uppercase tracking-[0.15em]">Fraud Insights</span>
+              </div>
+              <div className="bg-red-500/10 text-red-500 text-[8px] font-black px-1.5 py-0.5 rounded border border-red-500/20">AI</div>
+          </button>
+        </nav>
+
+        <div className="mt-auto pt-6 border-t border-slate-800/60">
+          <button 
+            onClick={onLogout}
+            className="w-full flex items-center gap-3 p-3.5 rounded-xl text-slate-500 hover:bg-rose-500/10 hover:text-rose-400 transition-all group"
+          >
+            <ArrowRight size={18} className="rotate-180 text-slate-700 group-hover:text-rose-400" />
+            <span className="text-[11px] font-black uppercase tracking-widest text-slate-600 group-hover:text-rose-400">Logout</span>
+          </button>
+        </div>
+      </div>
 
       <div className="flex-1 flex flex-col min-h-screen overflow-hidden">
         <Navbar user={user} title={pageTitles[activePage] || 'Admin Portal'} />
@@ -754,12 +822,16 @@ const AdminDashboard = ({ user, onLogout }) => {
                           )}
                         </div>
                       );
-                    })}
-                  </div>
-                )}
-              </div>
-            )}
+                  })}
+                </div>
+              )}
+            </div>
+          )}
 
+            {/* ── FRAUD INSIGHTS ── */}
+            {activePage === 'fraud' && (
+              <FraudInsights bills={bills} onAction={handleAction} />
+            )}
           </div>
         </main>
       </div>
