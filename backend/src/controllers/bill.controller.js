@@ -1,6 +1,7 @@
 const pool = require("../config/db");
 const OCRService = require("../services/ocr.service");
 const CurrencyService = require("../services/currency.service");
+const FraudService = require("../services/fraud.service");
 const { randomUUID } = require("crypto"); // Node.js built-in — no ESM issues
 
 // ──────────────────────────────────────────
@@ -23,11 +24,14 @@ exports.createBill = async (req, res) => {
     const conversionResult = await CurrencyService.convert(Number(amount), selectedCurrency, 'USD');
     const convertedAmount = conversionResult.convertedAmount;
 
+    // AI-Powered Fraud Analysis
+    const fraudResult = await FraudService.analyzeBill({ amount, title, receipt_url }, req.user);
+
     const result = await pool.query(
-      `INSERT INTO bills (title, amount, description, category, user_id, admin_status, manager_status, current_stage, currency, converted_amount, receipt_url)
-       VALUES ($1, $2, $3, $4, $5, 'pending', 'pending', 'admin_review', $6, $7, $8)
+      `INSERT INTO bills (title, amount, description, category, user_id, admin_status, manager_status, current_stage, currency, converted_amount, receipt_url, is_suspicious, fraud_reason, receipt_hash)
+       VALUES ($1, $2, $3, $4, $5, 'pending', 'pending', 'admin_review', $6, $7, $8, $9, $10, $11)
        RETURNING *`,
-      [title, Number(amount), description || null, category || null, userId, selectedCurrency, convertedAmount, receipt_url || null]
+      [title, Number(amount), description || null, category || null, userId, selectedCurrency, convertedAmount, receipt_url || null, fraudResult.is_suspicious, fraudResult.fraud_reason, fraudResult.receipt_hash]
     );
 
     console.log("✅ Bill created:", result.rows[0].id);
@@ -91,23 +95,29 @@ exports.batchUpload = async (req, res) => {
             console.warn(`⚠️ Currency conversion failed for file ${index + 1}:`, convErr.message);
           }
 
+          // AI-Powered Fraud Analysis
+          const fraudResult = await FraudService.analyzeBill({ amount: rawAmount, title: ocrData.title, receipt_url: file.path }, { id: userId, company_id: req.user.company_id });
+
           // Insert expense record into bills table
           const insertResult = await pool.query(
             `INSERT INTO bills 
               (title, amount, description, category, user_id, admin_status, manager_status, 
-               current_stage, currency, converted_amount, receipt_url, batch_id)
-             VALUES ($1, $2, $3, $4, $5, 'pending', 'pending', 'admin_review', $6, $7, $8, $9)
+               current_stage, currency, converted_amount, receipt_url, batch_id, is_suspicious, fraud_reason, receipt_hash)
+             VALUES ($1, $2, $3, $4, $5, 'pending', 'pending', 'admin_review', $6, $7, $8, $9, $10, $11, $12)
              RETURNING *`,
             [
-              ocrData.title || `Receipt ${index + 1}`,  // OCR-detected merchant or fallback
+              ocrData.title || `Receipt ${index + 1}`,
               rawAmount,
               ocrData.date ? `Date detected: ${ocrData.date}` : null,
-              'Other',           // Default category — user edits on frontend
+              'Other',
               userId,
               currency,
               convertedAmount,
-              file.path,         // Local file path served statically
-              batchId
+              file.path,
+              batchId,
+              fraudResult.is_suspicious,
+              fraudResult.fraud_reason,
+              fraudResult.receipt_hash
             ]
           );
 
