@@ -29,19 +29,28 @@ const checkApprovedUser = async (req, res, next) => {
   const pool = require('../config/db');
   try {
     const userId = req.user.id;
-    const result = await pool.query("SELECT status FROM users WHERE id = $1", [userId]);
+    const result = await pool.query(
+      "SELECT status, plan, plan_expiry FROM users WHERE id = $1", 
+      [userId]
+    );
+
     
     if (result.rows.length === 0) {
       return res.status(404).json({ success: false, message: "User not found" });
     }
 
-    const { status } = result.rows[0];
+    const { status, plan, plan_expiry } = result.rows[0];
     if (status !== 'approved') {
       return res.status(403).json({ 
         success: false, 
         message: `Access denied: Your account is currently '${status}'. Please contact an administrator.` 
       });
     }
+
+    // Merge plan data into req.user
+    req.user.plan = plan;
+    req.user.plan_expiry = plan_expiry;
+
 
     next();
   } catch (error) {

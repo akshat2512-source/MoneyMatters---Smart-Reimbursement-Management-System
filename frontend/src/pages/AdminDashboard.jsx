@@ -357,27 +357,52 @@ const AdminDashboard = ({ user, onLogout }) => {
             </button>
           ))}
 
-          <div className="pt-8 pb-4">
-              <span className="text-[9px] font-black text-slate-700 uppercase tracking-[0.2em] px-3">Advanced Intelligence</span>
+          <div className="pt-8 pb-4 flex items-center justify-between px-3">
+              <span className="text-[9px] font-black text-slate-700 uppercase tracking-[0.2em]">Advanced Intelligence</span>
+              {user?.plan === 'FREE' && (
+                <div className="bg-amber-500/10 text-amber-500 text-[8px] font-black px-1.5 py-0.5 rounded border border-amber-500/20">LOCKED</div>
+              )}
           </div>
 
           <button
-              onClick={() => setActivePage('fraud')}
+              onClick={() => user?.plan === 'FREE' ? window.location.href='/pricing' : setActivePage('fraud')}
               className={`w-full flex items-center justify-between p-3.5 rounded-xl transition-all ${
                 activePage === 'fraud' 
                   ? 'bg-gradient-to-r from-red-600 to-rose-500 text-white shadow-xl shadow-red-900/40' 
-                  : 'text-slate-500 hover:text-red-400 hover:bg-red-500/5'
+                  : user?.plan === 'FREE' ? 'text-slate-600 opacity-50 hover:bg-slate-800/20' : 'text-slate-500 hover:text-red-400 hover:bg-red-500/5'
               }`}
             >
               <div className="flex items-center gap-3">
-                <ShieldAlert size={18} className={activePage === 'fraud' ? 'text-white' : 'text-red-900/30'} />
+                <ShieldAlert size={18} className={activePage === 'fraud' ? 'text-white' : user?.plan === 'FREE' ? 'text-slate-700' : 'text-red-900/30'} />
                 <span className="text-[11px] font-black uppercase tracking-[0.15em]">Fraud Insights</span>
               </div>
-              <div className="bg-red-500/10 text-red-500 text-[8px] font-black px-1.5 py-0.5 rounded border border-red-500/20">AI</div>
+              {user?.plan === 'FREE' ? (
+                <Crown size={12} className="text-amber-500" />
+              ) : (
+                <div className="bg-red-500/10 text-red-500 text-[8px] font-black px-1.5 py-0.5 rounded border border-red-500/20">AI</div>
+              )}
           </button>
         </nav>
 
-        <div className="mt-auto pt-6 border-t border-slate-800/60">
+        <div className="mt-auto space-y-3 pt-6 border-t border-slate-800/60">
+          <div className="bg-slate-900/50 rounded-2xl p-4 border border-slate-800/50">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Active Plan</p>
+              <span className={`text-[8px] font-black px-1.5 py-0.5 rounded ${user?.plan === 'PRO' ? 'bg-indigo-500 text-white' : user?.plan === 'ENTERPRISE' ? 'bg-amber-500 text-white' : 'bg-slate-700 text-slate-300'}`}>
+                {user?.plan || 'FREE'}
+              </span>
+            </div>
+            {user?.plan_expiry && (
+              <p className="text-[9px] text-slate-600 font-bold">Expires: {new Date(user.plan_expiry).toLocaleDateString()}</p>
+            )}
+            <button 
+              onClick={() => window.location.href='/pricing'}
+              className="w-full mt-3 py-2 bg-indigo-600/10 hover:bg-indigo-600 text-indigo-400 hover:text-white text-[9px] font-black uppercase tracking-widest rounded-xl border border-indigo-600/20 transition-all"
+            >
+              {user?.plan === 'FREE' ? 'Upgrade Now' : 'Manage Plan'}
+            </button>
+          </div>
+
           <button 
             onClick={onLogout}
             className="w-full flex items-center gap-3 p-3.5 rounded-xl text-slate-500 hover:bg-rose-500/10 hover:text-rose-400 transition-all group"

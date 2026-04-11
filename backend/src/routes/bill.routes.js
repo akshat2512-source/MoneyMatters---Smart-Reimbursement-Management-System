@@ -17,14 +17,18 @@ router.get("/my",       authenticate, billController.getMyBills);
 router.post("/upload",  authenticate, isEmployee, upload.single('receipt'), billController.uploadReceipt);
 router.post("/scan",    authenticate, isEmployee, billController.scanReceipt);
 
+const { checkFeatureAccess } = require("../middleware/featureGate.js");
+
 // ── Employee: batch upload (up to 6 receipts) ──
 router.post(
   "/batch-upload",
   authenticate,
   isEmployee,
+  checkFeatureAccess('batchUpload'),
   upload.array('files', 6),  // multer handles max-6 + 5MB per file
   billController.batchUpload
 );
+
 
 // ── Admin: view all bills & batch groups ──
 router.get("/admin",           authenticate, isAdmin, billController.getAdminBills);

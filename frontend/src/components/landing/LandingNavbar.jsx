@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+
 
 const LandingNavbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -29,19 +31,21 @@ const LandingNavbar = () => {
           <div className="hidden md:flex items-center gap-8">
             <a href="#features" className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-indigo-600 transition-colors">Features</a>
             <a href="#how-it-works" className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-indigo-600 transition-colors">How it works</a>
-            <a href="#pricing" className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-indigo-600 transition-colors">Pricing</a>
+            <Link to="/pricing" className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-indigo-600 transition-colors">Pricing</Link>
+
           </div>
 
           <div className="hidden md:flex items-center gap-6">
-            <a href="/login" className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-indigo-600 transition-colors">Sign In</a>
-            <motion.a 
-              href="/signup" 
+            <Link to="/login" className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-indigo-600 transition-colors">Sign In</Link>
+            <motion.div 
+              onClick={() => window.location.href='/signup'}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl text-[9px] font-black uppercase tracking-[0.2em] flex items-center gap-2 shadow-lg shadow-indigo-200"
+              className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl text-[9px] font-black uppercase tracking-[0.2em] flex items-center gap-2 shadow-lg shadow-indigo-200 cursor-pointer"
             >
               Start Free <ArrowRight size={14} />
-            </motion.a>
+            </motion.div>
+
           </div>
 
           <button 
@@ -65,7 +69,8 @@ const LandingNavbar = () => {
             <div className="flex flex-col gap-8">
               <a href="#features" onClick={() => setMobileMenuOpen(false)} className="text-sm font-black uppercase tracking-widest text-slate-900">Features</a>
               <a href="#how-it-works" onClick={() => setMobileMenuOpen(false)} className="text-sm font-black uppercase tracking-widest text-slate-900">How it works</a>
-              <a href="#pricing" onClick={() => setMobileMenuOpen(false)} className="text-sm font-black uppercase tracking-widest text-slate-900">Pricing</a>
+              <Link to="/pricing" onClick={() => setMobileMenuOpen(false)} className="text-sm font-black uppercase tracking-widest text-slate-900">Pricing</Link>
+
               <div className="h-px bg-slate-100"></div>
               <a href="/login" className="text-sm font-black uppercase tracking-widest text-slate-900">Sign In</a>
               <a href="/signup" className="w-full py-5 bg-indigo-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-2 shadow-xl shadow-indigo-100">
