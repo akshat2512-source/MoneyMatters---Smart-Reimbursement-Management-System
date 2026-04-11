@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Eye, EyeOff, Zap, ArrowRight, Loader2, Building, UserPlus, XCircle } from 'lucide-react';
-import { login, createCompany, joinCompany } from '../api';
+import { login, createCompany, joinCompany, googleLogin } from '../api';
 
 const AuthPage = ({ onLogin }) => {
   const [authMode, setAuthMode] = useState('login'); // 'login' | 'create_company' | 'join_company'
@@ -17,6 +17,49 @@ const AuthPage = ({ onLogin }) => {
     companyName: '',
     inviteCode: ''
   });
+
+  const handleGoogleResponse = async (response) => {
+    setLoading(true);
+    setError('');
+    try {
+      const res = await googleLogin({ token: response.credential });
+      if (res.data.token) {
+        onLogin(res.data.user, res.data.token);
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || 'Google authentication failed.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    /* global google */
+    const initializeGoogle = () => {
+      if (window.google) {
+        google.accounts.id.initialize({
+          client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID || "your_google_client_id_here.apps.googleusercontent.com",
+          callback: handleGoogleResponse
+        });
+        
+        const googleBtn = document.getElementById("googleSignInDiv");
+        if (googleBtn) {
+          google.accounts.id.renderButton(googleBtn, {
+            theme: "outline",
+            size: "large",
+            text: "continue_with",
+            shape: "rectangular",
+            width: "380",
+            logo_alignment: "left"
+          });
+        }
+      }
+    };
+
+    // Retry initialization if script hasn't loaded yet
+    const timer = setTimeout(initializeGoogle, 500);
+    return () => clearTimeout(timer);
+  }, [authMode]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -158,6 +201,16 @@ const AuthPage = ({ onLogin }) => {
                 </button>
               </div>
             )}
+
+            <div className="mb-6">
+              <div id="googleSignInDiv" className="w-full flex justify-center mb-4 min-h-[44px]"></div>
+              
+              <div className="relative flex items-center justify-center my-6">
+                <div className="flex-1 border-t border-slate-100"></div>
+                <span className="px-3 text-[9px] font-black text-slate-300 uppercase tracking-widest bg-white">Or secure email</span>
+                <div className="flex-1 border-t border-slate-100"></div>
+              </div>
+            </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               {error && (
