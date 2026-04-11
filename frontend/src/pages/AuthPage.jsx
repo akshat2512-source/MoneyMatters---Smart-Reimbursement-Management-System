@@ -7,6 +7,7 @@ const AuthPage = ({ onLogin }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   
   const [formData, setFormData] = useState({
     name: '',
@@ -41,6 +42,12 @@ const AuthPage = ({ onLogin }) => {
           role: formData.role, 
           inviteCode: formData.inviteCode 
         });
+
+        if (response.data && !response.data.token) {
+          setSuccessMessage("Your request has been sent to the admin for approval. Please wait for some time and then try to login.");
+          setAuthMode('login'); // Switch to login after successful join (pending status)
+          setFormData({ ...formData, password: '' }); // Clear password
+        }
       }
 
       if (response.data.token) {
@@ -121,13 +128,13 @@ const AuthPage = ({ onLogin }) => {
             {/* Mode Switcher */}
             <div className="flex p-1 bg-slate-100/80 rounded-xl mb-8 border border-slate-200/60">
               <button 
-                onClick={() => setAuthMode('login')}
+                onClick={() => { setAuthMode('login'); setSuccessMessage(''); }}
                 className={`flex-1 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all ${authMode === 'login' ? 'bg-white text-indigo-600 shadow-sm border border-slate-200/50' : 'text-slate-400 hover:text-slate-600'}`}
               >
                 Sign In
               </button>
               <button 
-                onClick={() => setAuthMode('create_company')}
+                onClick={() => { setAuthMode('create_company'); setSuccessMessage(''); }}
                 className={`flex-1 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all ${authMode !== 'login' ? 'bg-white text-indigo-600 shadow-sm border border-slate-200/50' : 'text-slate-400 hover:text-slate-600'}`}
               >
                 Sign Up
@@ -157,6 +164,18 @@ const AuthPage = ({ onLogin }) => {
                 <div className="p-3 bg-rose-50 border border-rose-100 rounded-xl text-rose-500 text-[11px] font-bold flex items-center gap-2">
                     <XCircle size={14} />
                     {error}
+                </div>
+              )}
+
+              {successMessage && (
+                <div className="p-4 bg-emerald-50 border border-emerald-100 rounded-xl text-emerald-600 text-[11px] font-bold flex flex-col gap-1 shadow-sm animate-in fade-in slide-in-from-top-2 duration-300">
+                    <div className="flex items-center gap-2">
+                        <Zap size={14} className="fill-emerald-500" />
+                        Success!
+                    </div>
+                    <p className="text-emerald-500/80 font-medium">
+                        {successMessage}
+                    </p>
                 </div>
               )}
 

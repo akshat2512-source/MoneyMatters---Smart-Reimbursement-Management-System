@@ -12,6 +12,7 @@ const approvalRoutes = require('./routes/approval.routes');
 const companyRoutes  = require('./routes/company.routes');
 const billRoutes     = require('./routes/bill.routes');
 const currencyRoutes = require('./routes/currency.routes');
+const adminRoutes    = require('./routes/admin.routes');
 
 const app = express();
 app.use(cors());
@@ -34,6 +35,7 @@ app.use('/api/approvals',approvalRoutes);
 app.use('/api/company',  companyRoutes);
 app.use('/api/bills',    billRoutes);
 app.use('/api/currency', currencyRoutes);
+app.use('/api/admin',    adminRoutes);
 
 const PORT = process.env.PORT || 5002;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

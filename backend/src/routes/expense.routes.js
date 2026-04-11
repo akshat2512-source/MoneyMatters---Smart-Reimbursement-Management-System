@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 // 1. Import the whole class, don't use {}
 const ExpenseController = require('../controllers/expense.controller');
+const { authenticate, checkApprovedUser } = require('../middleware/auth.middleware');
+
+// Secure all expense routes
+router.use(authenticate, checkApprovedUser);
 
 // 2. Add a console log here to debug if it still fails
 console.log("ExpenseController loaded:", !!ExpenseController);
