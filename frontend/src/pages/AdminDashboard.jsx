@@ -14,7 +14,7 @@ import { getFullFileUrl } from '../utils/fileUtils';
 import {
   Plus, Users, DollarSign, Clock, CheckCircle, Shield,
   Trash2, MessageSquare, ArrowRight, Scan, Copy, ExternalLink,
-  ChevronRight, Inbox, FileText, Layers, ChevronDown, AlertCircle, X, ShieldAlert
+  ChevronRight, Inbox, FileText, Layers, ChevronDown, AlertCircle, X, ShieldAlert, Crown
 } from 'lucide-react';
 
 // ── Stat Card ────────────────────────────────────────────────────────────────
@@ -359,24 +359,24 @@ const AdminDashboard = ({ user, onLogout }) => {
 
           <div className="pt-8 pb-4 flex items-center justify-between px-3">
               <span className="text-[9px] font-black text-slate-700 uppercase tracking-[0.2em]">Advanced Intelligence</span>
-              {user?.plan === 'FREE' && (
+              {(user?.plan || 'FREE') === 'FREE' && (
                 <div className="bg-amber-500/10 text-amber-500 text-[8px] font-black px-1.5 py-0.5 rounded border border-amber-500/20">LOCKED</div>
               )}
           </div>
 
           <button
-              onClick={() => user?.plan === 'FREE' ? window.location.href='/pricing' : setActivePage('fraud')}
+              onClick={() => (user?.plan || 'FREE') === 'FREE' ? window.location.href='/pricing' : setActivePage('fraud')}
               className={`w-full flex items-center justify-between p-3.5 rounded-xl transition-all ${
                 activePage === 'fraud' 
                   ? 'bg-gradient-to-r from-red-600 to-rose-500 text-white shadow-xl shadow-red-900/40' 
-                  : user?.plan === 'FREE' ? 'text-slate-600 opacity-50 hover:bg-slate-800/20' : 'text-slate-500 hover:text-red-400 hover:bg-red-500/5'
+                  : (user?.plan || 'FREE') === 'FREE' ? 'text-slate-600 opacity-50 hover:bg-slate-800/20' : 'text-slate-500 hover:text-red-400 hover:bg-red-500/5'
               }`}
             >
               <div className="flex items-center gap-3">
-                <ShieldAlert size={18} className={activePage === 'fraud' ? 'text-white' : user?.plan === 'FREE' ? 'text-slate-700' : 'text-red-900/30'} />
+                <ShieldAlert size={18} className={activePage === 'fraud' ? 'text-white' : (user?.plan || 'FREE') === 'FREE' ? 'text-slate-700' : 'text-red-900/30'} />
                 <span className="text-[11px] font-black uppercase tracking-[0.15em]">Fraud Insights</span>
               </div>
-              {user?.plan === 'FREE' ? (
+              {(user?.plan || 'FREE') === 'FREE' ? (
                 <Crown size={12} className="text-amber-500" />
               ) : (
                 <div className="bg-red-500/10 text-red-500 text-[8px] font-black px-1.5 py-0.5 rounded border border-red-500/20">AI</div>
@@ -388,7 +388,7 @@ const AdminDashboard = ({ user, onLogout }) => {
           <div className="bg-slate-900/50 rounded-2xl p-4 border border-slate-800/50">
             <div className="flex items-center justify-between mb-2">
               <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Active Plan</p>
-              <span className={`text-[8px] font-black px-1.5 py-0.5 rounded ${user?.plan === 'PRO' ? 'bg-indigo-500 text-white' : user?.plan === 'ENTERPRISE' ? 'bg-amber-500 text-white' : 'bg-slate-700 text-slate-300'}`}>
+              <span className={`text-[8px] font-black px-1.5 py-0.5 rounded ${(user?.plan || 'FREE') === 'FREE' ? 'bg-slate-700 text-slate-300' : user?.plan === 'ENTERPRISE' ? 'bg-amber-500 text-white' : 'bg-indigo-500 text-white'}`}>
                 {user?.plan || 'FREE'}
               </span>
             </div>
@@ -399,7 +399,7 @@ const AdminDashboard = ({ user, onLogout }) => {
               onClick={() => window.location.href='/pricing'}
               className="w-full mt-3 py-2 bg-indigo-600/10 hover:bg-indigo-600 text-indigo-400 hover:text-white text-[9px] font-black uppercase tracking-widest rounded-xl border border-indigo-600/20 transition-all"
             >
-              {user?.plan === 'FREE' ? 'Upgrade Now' : 'Manage Plan'}
+              {(user?.plan || 'FREE') === 'FREE' ? 'Upgrade Now' : 'Manage Plan'}
             </button>
           </div>
 

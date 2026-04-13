@@ -23,10 +23,11 @@ exports.createCompany = async (req, res) => {
     }
 
     const companyResult = await pool.query(
-      "INSERT INTO companies (name, country, currency_code, invite_code) VALUES ($1, $2, $3, $4) RETURNING id",
+      "INSERT INTO companies (name, country, currency_code, invite_code) VALUES ($1, $2, $3, $4) RETURNING id, plan, plan_expiry",
       [companyName, "Unknown", "USD", inviteCode]
     );
-    const companyId = companyResult.rows[0].id;
+    const company = companyResult.rows[0];
+    const companyId = company.id;
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -44,7 +45,7 @@ exports.createCompany = async (req, res) => {
 
     return res.json({
       message: "Company created successfully",
-      user: { id: user.id, name: user.name, email: user.email, role: user.role, inviteCode },
+      user: { id: user.id, name: user.name, email: user.email, role: user.role, inviteCode, plan: company.plan, plan_expiry: company.plan_expiry },
       token,
     });
   } catch (error) {
@@ -108,7 +109,7 @@ exports.login = async (req, res) => {
 
   try {
     const result = await pool.query(
-      `SELECT u.*, c.invite_code 
+      `SELECT u.*, c.invite_code, c.plan, c.plan_expiry 
        FROM users u 
        LEFT JOIN companies c ON u.company_id = c.id 
        WHERE u.email = $1`,
@@ -145,7 +146,9 @@ exports.login = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
-        inviteCode: user.invite_code // Provide inviteCode for frontend
+        inviteCode: user.invite_code, // Provide inviteCode for frontend
+        plan: user.plan,
+        plan_expiry: user.plan_expiry
       },
       token,
     });
@@ -175,7 +178,7 @@ exports.googleLogin = async (req, res) => {
 
     // 2. Check if user exists by email
     const userResult = await pool.query(
-      `SELECT u.*, c.invite_code 
+      `SELECT u.*, c.invite_code, c.plan, c.plan_expiry 
        FROM users u 
        LEFT JOIN companies c ON u.company_id = c.id 
        WHERE u.email = $1`,
@@ -202,10 +205,11 @@ exports.googleLogin = async (req, res) => {
 
       const companyName = `${name}'s Workspace`;
       const companyResult = await pool.query(
-        "INSERT INTO companies (name, country, currency_code, invite_code) VALUES ($1, $2, $3, $4) RETURNING id",
+        "INSERT INTO companies (name, country, currency_code, invite_code) VALUES ($1, $2, $3, $4) RETURNING id, plan, plan_expiry",
         [companyName, "Unknown", "USD", inviteCode]
       );
-      const companyId = companyResult.rows[0].id;
+      const company = companyResult.rows[0];
+      const companyId = company.id;
 
       // 4. Create User as Admin
       const newUserResult = await pool.query(
@@ -214,6 +218,8 @@ exports.googleLogin = async (req, res) => {
       );
       user = newUserResult.rows[0];
       user.invite_code = inviteCode;
+      user.plan = company.plan;
+      user.plan_expiry = company.plan_expiry;
     }
 
     // 5. Generate JWT
@@ -230,7 +236,9 @@ exports.googleLogin = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
-        inviteCode: user.invite_code
+        inviteCode: user.invite_code,
+        plan: user.plan,
+        plan_expiry: user.plan_expiry
       },
       token: jwtToken,
     });

@@ -189,7 +189,7 @@ const EmployeeDashboard = ({ user, onLogout }) => {
           <div className="hidden lg:flex flex-col gap-2 p-4 bg-[#0A0C10] border-t border-slate-800/60 mt-auto">
             <div className="flex items-center justify-between mb-1">
               <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Plan</span>
-              <span className={`text-[8px] font-black px-1.5 py-0.5 rounded ${user?.plan === 'PRO' ? 'bg-indigo-500 text-white' : 'bg-slate-700 text-slate-300'}`}>
+              <span className={`text-[8px] font-black px-1.5 py-0.5 rounded ${(user?.plan || 'FREE') === 'FREE' ? 'bg-slate-700 text-slate-300' : 'bg-indigo-500 text-white'}`}>
                 {user?.plan || 'FREE'}
               </span>
             </div>
@@ -197,7 +197,7 @@ const EmployeeDashboard = ({ user, onLogout }) => {
               onClick={() => window.location.href='/pricing'}
               className="w-full py-2 bg-indigo-600/10 hover:bg-indigo-600 text-indigo-400 hover:text-white text-[9px] font-black uppercase tracking-widest rounded-xl border border-indigo-600/20 transition-all text-center"
             >
-              {user?.plan === 'FREE' ? 'Upgrade' : 'Manage'}
+              {(user?.plan || 'FREE') === 'FREE' ? 'Upgrade' : 'Manage'}
             </button>
           </div>
         </div>
@@ -227,16 +227,16 @@ const EmployeeDashboard = ({ user, onLogout }) => {
                     <div className="flex items-center gap-2">
                       {/* Batch Upload Button */}
                       <button
-                        onClick={() => user?.plan === 'FREE' ? window.location.href='/pricing' : setShowBatchModal(true)}
+                        onClick={() => (user?.plan || 'FREE') === 'FREE' ? window.location.href='/pricing' : setShowBatchModal(true)}
                         className={`flex items-center gap-2 btn-secondary h-10 px-4 transition-all ${
-                          user?.plan === 'FREE' 
+                          (user?.plan || 'FREE') === 'FREE' 
                             ? 'bg-slate-200 text-slate-500 border-none cursor-pointer' 
                             : 'bg-violet-600 text-white border-none hover:bg-violet-700 shadow-md'
                         }`}
                       >
-                        {user?.plan === 'FREE' ? <Crown size={14} className="text-amber-500" /> : <Layers size={16} />}
+                        {(user?.plan || 'FREE') === 'FREE' ? <Crown size={14} className="text-amber-500" /> : <Layers size={16} />}
                         <span className="font-bold tracking-widest text-[10px] uppercase">
-                          {user?.plan === 'FREE' ? 'Upgrade for Batch' : 'Batch Upload'}
+                          {(user?.plan || 'FREE') === 'FREE' ? 'Upgrade for Batch' : 'Batch Upload'}
                         </span>
                       </button>
                       {/* Single OCR Auto-Detect */}
@@ -375,16 +375,16 @@ const EmployeeDashboard = ({ user, onLogout }) => {
                         </div>
                       </div>
 
-                      <div className={`p-5 rounded-2xl text-white shadow-xl relative overflow-hidden group ${user?.plan === 'FREE' ? 'bg-indigo-600' : 'bg-slate-800'}`}>
+                      <div className={`p-5 rounded-2xl text-white shadow-xl relative overflow-hidden group ${(user?.plan || 'FREE') === 'FREE' ? 'bg-indigo-600' : 'bg-slate-800'}`}>
                         <div className="absolute -right-6 -bottom-6 p-10 bg-white/5 rounded-full group-hover:scale-110 transition-transform">
                           <Crown size={60} strokeWidth={1} />
                         </div>
                         <h4 className="text-[9px] font-black uppercase tracking-widest mb-1 opacity-60">Subscription Status</h4>
                         <p className="text-[10px] font-medium leading-relaxed opacity-90">
-                          {user?.plan === 'FREE' ? (
+                          {(user?.plan || 'FREE') === 'FREE' ? (
                             <>You are on the <strong>Starter</strong> plan. Upgrade to <strong>Pro</strong> to unlock Batch Uploads and AI Fraud Detection.</>
                           ) : (
-                            <>You are on the <strong>{user?.plan}</strong> plan. All premium features are active.</>
+                            <>You are on the <strong>{user?.plan || 'PRO'}</strong> plan. All premium features are active.</>
                           )}
                         </p>
                       </div>
