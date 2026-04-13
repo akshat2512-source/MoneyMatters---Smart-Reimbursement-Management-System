@@ -33,7 +33,9 @@ const PricingPage = ({ user, onLogin }) => {
                 alert("Payment Successful! Your plan has been upgraded.");
                 // Update local user state
                 const updatedUser = { ...user, ...res.data.user };
+                const token = localStorage.getItem('token');
                 localStorage.setItem('user', JSON.stringify(updatedUser));
+                
                 if (onLogin) onLogin(updatedUser, token);
                 window.location.href = '/dashboard';
               }

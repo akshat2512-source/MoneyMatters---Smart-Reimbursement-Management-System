@@ -30,7 +30,10 @@ const checkApprovedUser = async (req, res, next) => {
   try {
     const userId = req.user.id;
     const result = await pool.query(
-      "SELECT status, plan, plan_expiry FROM users WHERE id = $1", 
+      `SELECT u.status, c.plan, c.plan_expiry 
+       FROM users u 
+       LEFT JOIN companies c ON u.company_id = c.id 
+       WHERE u.id = $1`, 
       [userId]
     );
 

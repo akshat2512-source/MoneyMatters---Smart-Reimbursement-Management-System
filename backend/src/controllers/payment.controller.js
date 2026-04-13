@@ -40,7 +40,7 @@ exports.createOrder = async (req, res) => {
     
     // Store order ID in DB for verification later
     await pool.query(
-      'UPDATE users SET razorpay_order_id = $1 WHERE id = $2',
+      'UPDATE companies SET razorpay_order_id = $1 WHERE id = (SELECT company_id FROM users WHERE id = $2)',
       [order.id, req.user.id]
     );
 
@@ -77,15 +77,22 @@ exports.verifyPayment = async (req, res) => {
     const expiryDate = new Date();
     expiryDate.setDate(expiryDate.getDate() + 30);
 
-    const result = await pool.query(
-      `UPDATE users 
+    await pool.query(
+      `UPDATE companies 
        SET plan = $1, 
            plan_expiry = $2, 
            razorpay_subscription_id = $3,
            razorpay_order_id = NULL
-       WHERE id = $4
-       RETURNING id, name, email, role, company_id, plan, plan_expiry`,
+       WHERE id = (SELECT company_id FROM users WHERE id = $4)`,
       [planType, expiryDate, razorpay_payment_id, req.user.id]
+    );
+
+    const result = await pool.query(
+      `SELECT u.id, u.name, u.email, u.role, u.company_id, c.plan, c.plan_expiry, c.invite_code 
+       FROM users u
+       JOIN companies c ON u.company_id = c.id
+       WHERE u.id = $1`,
+      [req.user.id]
     );
 
     res.json({
